@@ -5,8 +5,7 @@ export default function Footer() {
   // Footer link hover gradient class
   const footerLinkHoverClass =
     "transition-transform duration-300 " +
-    "hover:bg-gradient-to-r hover:from-[#ED4930] hover:to-[#F7A823] hover:bg-clip-text hover:text-transparent";
-
+    "hover:bg-gradient-to-r hover:from-[#F27F68] hover:to-[#F7A823] hover:bg-clip-text hover:text-transparent";
   return (
     <footer className="bg-[#232F3E] text-[#ccc] font-[Poppins,sans-serif]">
       <div className="w-full  mx-auto grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr] gap-6 px-5 py-7 md:py-7">
