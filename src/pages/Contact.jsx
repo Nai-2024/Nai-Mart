@@ -13,7 +13,7 @@ export default function ContactUs() {
       </div>
 
       {/* Example content */}
-      <h2 className="text-2xl font-bold mb-3">Contact Us</h2>
+      <h2 className="text-2xl font-bold pt-3">Contact Us</h2>
       <p className="text-gray-700">
         Lorem ipsum dolor sit amet consectetur adipisicing elit. Quis animi laudantium ut cumque neque temporibus quas accusantium? Eaque mollitia quisquam vitae laborum est voluptates perspiciatis. Eos quia quo et sed.
       </p>

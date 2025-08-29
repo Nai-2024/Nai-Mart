@@ -14,8 +14,8 @@
 
   */
 import { useEffect, useState } from "react";
-import SidebarFilters from "./SidebarFilters";
-import ProductsList from "./ProductsList";
+import SidebarFilters from "../components/SidebarFilters";
+import ProductsList from "../components/ProductsList";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
@@ -53,12 +53,15 @@ export default function ProductsPage() {
 
   if (loading) return <p>Loading...</p>;
 
-  return (
-    <div className="flex flex-col md:flex-row gap-3 p-4">
+return (
+  <div className="w-full flex justify-center">
+    <div className="w-full max-w-[1500px] flex flex-col md:flex-row gap-3 p-4">
       <SidebarFilters onFilterChange={handleFilterChange} />
       <ProductsList products={filteredProducts} />
     </div>
-  );
+  </div>
+);
+
 }
 
 

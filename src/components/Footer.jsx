@@ -1,38 +1,63 @@
-
 import { Link } from "react-router-dom";
 
 export default function Footer() {
+  // Reusable constant for footer link styles
+  // Footer link hover gradient class
+  const footerLinkHoverClass =
+    "transition-transform duration-300 " +
+    "hover:bg-gradient-to-r hover:from-[#ED4930] hover:to-[#F7A823] hover:bg-clip-text hover:text-transparent";
+
   return (
-    <footer className="bg-[#1a1a1a] text-[#ccc] font-[Poppins,sans-serif]">
-      <div className="max-w-[1300px] mx-auto grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr] gap-6 px-5 py-10 md:py-12">
+    <footer className="bg-[#232F3E] text-[#ccc] font-[Poppins,sans-serif]">
+      <div className="w-full  mx-auto grid grid-cols-1 md:grid-cols-[1fr_3fr_1fr] gap-6 px-5 py-7 md:py-7">
         {/* Quick Links */}
         <div>
-          <h3 className="text-white mb-3">Quick Links</h3>
-          <Link to="/" href="#" className="block mb-2 hover:text-[#16a085]">Home</Link>
-          <Link to="/about" href="#" className="block mb-2 hover:text-[#16a085]">About Us</Link>
-          <Link to="/contact" href="#" className="block mb-2 hover:text-[#16a085]">Contact</Link>
+          <h3 className="text-white pb-1">Quick Links</h3>
+          <Link to="/" className={`block ${footerLinkHoverClass}`}>
+            Home
+          </Link>
+          <Link to="/about" className={`block ${footerLinkHoverClass}`}>
+            About Us
+          </Link>
+          <Link to="/contact" className={`block ${footerLinkHoverClass}`}>
+            Contact
+          </Link>
         </div>
 
         {/* About Section */}
         <div className="text-center">
-          <h3 className="text-white mb-3">Nai Electronics</h3>
-          <p className="mb-2">Your trusted online store for electronics, gadgets, and more.</p>
+          <h3
+            className="font-bold text-base md:text-lg inline-block
+               bg-gradient-to-r from-[#ED4930] to-[#F7A823] bg-clip-text text-transparent"
+          >
+            Nai Mart
+          </h3>
+          <p className="pb-3">
+            {" "}
+            Shop the latest in clothing, electronics, and jewelry—all in one
+            trusted online store.
+          </p>
+          <Link
+            to="/userauth"
+            state={{ isLogin: false }}
+            className="bg-yellow-600 text-gray-900 text-sm font-bold px-9 py-1 rounded-full hover:bg-yellow-700 transition-colors cursor-pointer"
+          >
+            Sign Up
+          </Link>
         </div>
 
         {/* Contact Info */}
         <div className="text-left md:justify-self-end text-center md:text-left">
-          <h3 className="text-white mb-3">Contact</h3>
-          <p className="mb-2">Email: info@naielectronics.com</p>
+          <h3 className="text-white pb-1">Contact</h3>
+          <p className="mb-2">Email: info@naimart.com</p>
           <p className="mb-2">Phone: +1 234 567 890</p>
-          <p>Address: 123 Main Street, City</p>
+          <p>Address: 1 Main Street, Toronto</p>
         </div>
       </div>
 
-      <div className="bg-[#111] text-center py-4 text-sm text-[#aaa]">
-        &copy; {new Date().getFullYear()} Nai Electronics. All rights reserved.
+      <div className="bg-[#131A22] text-center py-4 text-sm text-[#aaa] fw-bold">
+        &copy; {new Date().getFullYear()} Nai Mart. All rights reserved.
       </div>
     </footer>
   );
 }
-
-
