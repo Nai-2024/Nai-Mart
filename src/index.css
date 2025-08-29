@@ -7,14 +7,14 @@
 body {
   min-width: 320px;
   min-height: 100vh;
-  display: flex; /* enable flex layout */
+  display: flex; 
   flex-direction: column; /* stack header, main, footer vertically */
   margin: 0;
   background: #eaeaea;
   font-family: "Roboto", sans-serif;
-  font-weight: 400; /* regular */
-  font-size: 16px; /* default readable size */
-  color: #333333; /* dark gray for good readability */
+  font-weight: 400; 
+  font-size: 16px; 
+  color: #333333; 
 }
 
 #root {
