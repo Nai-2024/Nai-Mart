@@ -5,10 +5,13 @@ import AboutUs from "./pages/AboutUs.jsx";
 import Contact from "./pages/Contact.jsx";
 import ProductsPage from "./pages/Home.jsx";
 import Checkout from "./pages/Checkout.jsx";
+import Payment from "./pages/Payment.jsx";
 import ProductDetails from "./pages/ProductDetails.jsx";
 import { CartProvider } from "./components/cart/CartProvider.jsx";
 import ProductCart from "./components/cart/ProductCart.jsx";
-import UserAuth from "./pages/UserAuth.jsx";
+import SignUpForm from "./pages/SignInForm.jsx";
+import SignInForm from "./pages/SignInForm.jsx";
+import OrderConfirmation from "./pages/OrderConfirmation.jsx";
 
 function App() {
   return (
@@ -25,7 +28,10 @@ function App() {
               <Route path="/contact" element={<Contact />} />
               <Route path="/cart" element={<ProductCart />} />
               <Route path="/checkout" element={<Checkout />} />
-              <Route path="/userauth" element={<UserAuth />} />
+              <Route path="/payment" element={<Payment />} /> 
+              <Route path="/order-confirmation" element={<OrderConfirmation />} /> 
+              <Route path="/signup" element={<SignUpForm />} />
+              <Route path="/login" element={<SignInForm />} />
             </Routes>
           </main>
           <Footer />

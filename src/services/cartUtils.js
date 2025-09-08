@@ -1,12 +1,4 @@
 
-
-
-
-export function getCart() {
-  const cart = localStorage.getItem("cart"); // - cart → the value we got from localStorage.getItem("cart"). If nothing is stored yet, cart will be null.
-  return cart ? JSON.parse(cart) : []; //  - cart ? JSON.parse(cart) : [] → means: If cart exists → convert the string to a  JavaScript array using JSON.parse(cart). other wise return an empty array []
-}
-
 /*
  - localStorage a built-in feature of your browser (Chrome, Firefox, etc.).
  - store small amounts of data directly in the browser.
@@ -17,9 +9,13 @@ export function getCart() {
  - You pass a key (a name) to it, and it returns the value stored under that key.
 */
 
+export function getCart() {
+  const cart = localStorage.getItem("cart"); // - cart → the value we got from localStorage.getItem("cart"). If nothing is stored yet, cart will be null.
+  return cart ? JSON.parse(cart) : []; //  - cart ? JSON.parse(cart) : [] → means: If cart exists → convert the string to a  JavaScript array using JSON.parse(cart). other wise return an empty array []
+}
+
 export function addToCart(product) {
-  const cart = getCart(); 
-  // Now adding the new product to the existing cart items
+  const cart = getCart(); // ← here it uses getCart() to know what’s already in the cart
   // saves data in the browser under the name key. We use "cart" as the key.
   // JSON.stringify(cart) converts the array into a string because localStorage can only store strings.
   // Now the updated cart is saved in the browser, so even if the page is refreshed, the cart stays there.
@@ -30,13 +26,13 @@ export function addToCart(product) {
   const existing = cart.find((item) => item.id === product.id);
 
   if (existing) {
-    // increase quantity
+    // If Yes, increase quantity
     existing.quantity = (existing.quantity || 1) + 1;
   } else {
-    // add new product with quantity = 1
+    // if not then add new product with quantity = 1
     cart.push({ ...product, quantity: 1 });
   }
-
+  // Saves the updated cart back to localStorage using setItem.
   localStorage.setItem("cart", JSON.stringify(cart));
 }
 
@@ -58,25 +54,30 @@ export function calculateCartTotals(cartItems) {
     0
   );
 
+  // Shipment Price Calculation
   let shipping = cartItems.reduce((sum, item) => {
     const qty = item.quantity || 1;
     const cat = (item.category || "").toLowerCase();
     const rate = cat.includes("clothing")
-      ? 12
+      ? 12 // Cloth shipment price
       : cat.includes("electronics")
-      ? 15
+      ? 15 // Electronics shipment price
       : cat.includes("jewel")
-      ? 20
-      : 10;
+      ? 20 // Jewelery shipment price
+      : 10; // Default shipment price
 
-    return sum + rate * qty;
+    return sum + rate * qty;  // 100 + 12 *1
   }, 0);
 
   // Apply shipping discount
+  // If subtotl > $500, shipment cost = 0,  subtotl > $250 , shipment cost = 50% off, 
   shipping = subtotal > 500 ? 0 : subtotal >= 250 ? shipping * 0.5 : shipping;
 
-  const tax = subtotal * 0.13;
-  const total = subtotal + tax + shipping;
+  const tax = subtotal * 0.13; // 13% tax
+  const total = subtotal + tax + shipping; // Total order cost
 
   return { subtotal, shipping, tax, total };
 }
+
+
+

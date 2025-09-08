@@ -11,18 +11,16 @@ export default function Header() {
     0
   );
 
-
-
-const StyledNavLink = ({ to, children }) => (
-  <NavLink
-    to={to}
-    className="font-medium tracking-wide cursor-pointer text-sm md:text-base transition-transform duration-300 hover:scale-110 relative 
+  const StyledNavLink = ({ to, children }) => (
+    <NavLink
+      to={to}
+      className="font-medium tracking-wide cursor-pointer text-sm md:text-base transition-transform duration-300 hover:scale-110 relative 
                bg-gradient-to-r from-[#ED4930] to-[#F7A823] bg-clip-text text-transparent
                after:block after:absolute after:bottom-0 after:left-0 after:h-0.5 after:w-0 after:bg-gradient-to-r after:from-[#ED4930] after:to-[#F7A823] after:transition-all hover:after:w-full"
-  >
-    {children}
-  </NavLink>
-);
+    >
+      {children}
+    </NavLink>
+  );
 
   return (
     <header className="w-full bg-[#232F3E] font-poppins font-semibold sticky top-0 z-50 shadow-md">
@@ -43,7 +41,7 @@ const StyledNavLink = ({ to, children }) => (
           <StyledNavLink to="/">Home</StyledNavLink>
           <StyledNavLink to="/about">About Us</StyledNavLink>
           <StyledNavLink to="/contact">Contact</StyledNavLink>
-          <StyledNavLink to="/userauth" state = {{isLogin: true}} >Login</StyledNavLink>
+          <StyledNavLink to="/loging">Login</StyledNavLink>
         </div>
 
         {/* Right Section - Cart */}

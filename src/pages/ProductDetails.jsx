@@ -1,5 +1,5 @@
 import { useLocation, useNavigate } from "react-router-dom";
-import { addToCart, getCart } from "../srvices/cartUtils";
+import { addToCart, getCart } from "../services/cartUtils";
 import { useContext } from "react";
 import { CartContext } from "../components/cart/CartProvider";
 

@@ -1,6 +1,9 @@
 
-
+// CartItem Component - Child component 
+// item, onIncrease, onDecrease, onRemove are the props that comes from parent component -ProductCart
+// It renders img, decrease, increase, delete (buttons) and price.
 export default function CartItem({ item, onIncrease, onDecrease, onRemove }) {
+
   return (
     <div className="bg-gray-100 p-4 rounded shadow flex flex-col md:flex-row min-h-[220px]">
       {/* Product Image */}
@@ -22,15 +25,16 @@ export default function CartItem({ item, onIncrease, onDecrease, onRemove }) {
         {/* Quantity + Price */}
         <div className="flex justify-between items-center pt-5 pb-1 md:mt-auto gap-2">
           <div className="flex items-center gap-2">
+            {/* Decrease qty button */}
             <button
               className="w-8 h-8 flex items-center justify-center bg-gray-300 text-black rounded-full hover:bg-gray-400 transition cursor-pointer"
               onClick={onDecrease}
             >
-              –
+              -
             </button>
-
+            {/* Quantity with min*/}
             <span className="px-3 py-1">{item.quantity || 1}</span>
-
+            {/* Increase qty button */}
             <button
               className="w-8 h-8 flex items-center justify-center bg-yellow-500 text-black rounded-full hover:bg-yellow-600 transition cursor-pointer"
               onClick={onIncrease}
@@ -47,7 +51,7 @@ export default function CartItem({ item, onIncrease, onDecrease, onRemove }) {
           </button>
 
           <span className="text-yellow-600 font-bold">
-            ${(item.price * (item.quantity || 1)).toFixed(2)}
+            ${(item.price * (item.quantity || 1)).toFixed(2)} {/*JS method -formats a number to have exactly 2 decimal places. - $5.00 */}
           </span>
         </div>
       </div>

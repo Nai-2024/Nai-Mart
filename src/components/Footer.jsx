@@ -1,4 +1,5 @@
 import { Link } from "react-router-dom";
+import { companyInfo } from "../services/contact";
 
 export default function Footer() {
   // Reusable constant for footer link styles
@@ -21,6 +22,10 @@ export default function Footer() {
           <Link to="/contact" className={`block ${footerLinkHoverClass}`}>
             Contact
           </Link>
+          <Link to="/login" className={`block ${footerLinkHoverClass}`}>
+            Login
+          </Link>
+          
         </div>
 
         {/* About Section */}
@@ -37,7 +42,7 @@ export default function Footer() {
             trusted online store.
           </p>
           <Link
-            to="/userauth"
+            to="/signup"
             state={{ isLogin: false }}
             className="bg-yellow-600 text-gray-900 text-sm font-bold px-9 py-1 rounded-full hover:bg-yellow-700 transition-colors cursor-pointer"
           >
@@ -48,9 +53,9 @@ export default function Footer() {
         {/* Contact Info */}
         <div className="text-left md:justify-self-end text-center md:text-left">
           <h3 className="text-white pb-1">Contact</h3>
-          <p className="mb-2">Email: info@naimart.com</p>
-          <p className="mb-2">Phone: +1 234 567 890</p>
-          <p>Address: 1 Main Street, Toronto</p>
+          <p className="mb-2">Email: {companyInfo.email}</p>
+          <p className="mb-2">Phone: {companyInfo.phone}</p>
+          <p>Address: {companyInfo.address}</p>
         </div>
       </div>
 
