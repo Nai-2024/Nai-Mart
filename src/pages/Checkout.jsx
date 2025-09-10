@@ -3,7 +3,7 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/cart/CartProvider";
 import { calculateCartTotals } from "../services/cartUtils";
 import CartSummary from "../components/cart/CartSummery";
-import ShippingForm from "./ShippingForm";
+import ShippingForm from "../components/ShippingForm";
 
 export default function Checkout() {
   const { cartItems } = useContext(CartContext);
@@ -24,7 +24,7 @@ export default function Checkout() {
 <div className="w-full flex justify-center p-4">
   <div className="w-full max-w-[1500px] flex flex-col md:flex-row gap-2">
     {/* Shipping Form - 65% */}
-    <div className="w-full md:w-2/3 px-5 py-5 bg-gray-100 rounded">
+    <div className="w-full md:w-2/3 px-3 py-5 bg-gray-100 rounded shadow">
       <ShippingForm onSubmit={handleShippingSubmit} />
     </div>
 

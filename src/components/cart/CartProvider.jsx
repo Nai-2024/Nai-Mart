@@ -5,7 +5,6 @@ import { createContext, useState, useEffect } from "react";
 import { getCart } from "../../services/cartUtils";
 
 // Create the context
-// eslint-disable-next-line react-refresh/only-export-components
 export const CartContext = createContext();
 
 // Create a provider component
@@ -20,10 +19,20 @@ export function CartProvider({ children }) {
   // Helper to update cart and context
   const updateCart = (newCart) => {
     setCartItems(newCart);
+    localStorage.setItem("cart", JSON.stringify(newCart)); // ✅ keep storage in sync
   };
 
-  return (
-    <CartContext.Provider value={{ cartItems, setCartItems, updateCart }}>
+
+    // New: clear the cart completely
+  const clearCart = () => {
+    setCartItems([]);
+    localStorage.removeItem("cart");
+  };
+
+ return (
+    <CartContext.Provider
+      value={{ cartItems, setCartItems, updateCart, clearCart }}
+    >
       {children}
     </CartContext.Provider>
   );

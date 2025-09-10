@@ -1,16 +1,14 @@
-
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth } from "../services/firebaseConfig";
+import { auth, db } from "../services/firebaseConfig";
+import { doc, getDoc } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
 
 export default function SignInForm() {
-  const [formData, setFormData] = useState({
-    email: "",
-    password: "",
-  });
-
+  const [formData, setFormData] = useState({ email: "", password: "" });
   const [errors, setErrors] = useState({});
   const [toast, setToast] = useState("");
+  const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -28,15 +26,23 @@ export default function SignInForm() {
     }
 
     try {
-      await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const user = userCredential.user;
 
-      // Show success toast
-      setToast("Login successful! 🎉");
+      // Fetch full user info from Firestore
+      const userDoc = await getDoc(doc(db, "users", user.uid));
+      let userData = {};
+      if (userDoc.exists()) {
+        userData = userDoc.data();
+      }
 
-      // Reset form
+      // Save all info in localStorage
+      localStorage.setItem("currentUser", JSON.stringify({ uid: user.uid, email: user.email, ...userData }));
+
+      setToast(`Welcome back, ${userData.firstName || "User"}! 🎉`);
       setFormData({ email: "", password: "" });
 
-      // Hide toast after 3 seconds
+      navigate("/");
       setTimeout(() => setToast(""), 3000);
     } catch (err) {
       setErrors({ general: "Invalid email or password." });

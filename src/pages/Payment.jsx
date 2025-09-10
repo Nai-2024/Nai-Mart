@@ -5,7 +5,7 @@ import { getCart, calculateCartTotals } from "../services/cartUtils";
 import CartSummary from "../components/cart/CartSummery";
 
 export default function Payment() {
-  const { cartItems, setCartItems } = useContext(CartContext);
+  const { cartItems, setCartItems, clearCart } = useContext(CartContext);
   const navigate = useNavigate();
 
   // Load cart from localStorage
@@ -30,18 +30,37 @@ export default function Payment() {
     setPaymentData((prev) => ({ ...prev, [name]: value }));
   };
 
-  const handleSubmit = (e) => {
+  // --- Form submit handler ---
+const handleSubmit = (e) => {
     e.preventDefault();
+
+    // basic validation
+    if (
+      !paymentData.cardholder ||
+      !paymentData.cardType ||
+      !paymentData.cardNumber ||
+      !paymentData.expiry ||
+      !paymentData.cvv
+    ) {
+      alert("Please fill in all payment fields.");
+      return;
+    }
+
     console.log("Payment info:", paymentData);
-    alert("Payment submitted!");
+
+    // Clear cart after payment
+    clearCart();
+
+    // Navigate to confirmation page
+    navigate("/order-confirmation");
   };
 
   return (
     <div className="w-full flex justify-center">
       <div className="w-full max-w-[1500px] flex flex-col md:flex-row gap-2 p-4">
         {/* Payment Form - 65% */}
-        <div className="w-full md:w-2/3 p-5 bg-gray-100 rounded">
-          <h2 className="text-xl font-semibold pb-4">Payment Details</h2>
+        <div className="w-full md:w-2/3 p-4 bg-gray-100 rounded shadow">
+          <h2 className="text-xl font-semibold pb-4">Payment Details:</h2>
           <form onSubmit={handleSubmit} className="flex flex-col gap-4">
             {/* Cardholder Name */}
             <div className="flex flex-col">
@@ -52,7 +71,7 @@ export default function Payment() {
                 value={paymentData.cardholder}
                 onChange={handleChange}
                 placeholder="Your Name"
-                className="border border-gray-400 p-2 rounded"
+                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
               />
             </div>
@@ -64,10 +83,10 @@ export default function Payment() {
                 name="cardType"
                 value={paymentData.cardType}
                 onChange={handleChange}
-                className="border border-gray-400 p-2 rounded"
+                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
               >
-                <option value="" className="text-gray-400" disabled>
+                <option value="" disabled>
                   Select Card Type
                 </option>
                 <option value="Visa">Visa</option>
@@ -85,7 +104,7 @@ export default function Payment() {
                 value={paymentData.cardNumber}
                 onChange={handleChange}
                 placeholder="1234 5678 9012 3456"
-                className="border border-gray-400 p-2 rounded"
+                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                 required
               />
             </div>
@@ -100,7 +119,7 @@ export default function Payment() {
                   value={paymentData.expiry}
                   onChange={handleChange}
                   placeholder="MM/YY"
-                  className="border border-gray-400 p-2 rounded"
+                  className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
@@ -112,15 +131,23 @@ export default function Payment() {
                   value={paymentData.cvv}
                   onChange={handleChange}
                   placeholder="***"
-                  className="border border-gray-400 p-2 rounded"
+                  className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
                   required
                 />
               </div>
             </div>
+
+            {/* Submit Button */}
+            <button
+              type="submit"
+              className="w-full bg-yellow-500 text-black p-2 rounded-full font-bold hover:bg-yellow-600 transition cursor-pointer mt-4"
+            >
+              Pay Now
+            </button>
           </form>
         </div>
 
-        {/* Cart Summary + Continue - 35% */}
+        {/* Cart Summary - 35% */}
         <div className="w-full md:w-1/3 flex flex-col gap-4">
           <CartSummary
             subtotal={subtotal}
@@ -129,14 +156,7 @@ export default function Payment() {
             total={total}
             showCheckoutButton={false}
             className="bg-gray-100 rounded shadow"
-          >
-            <button
-              onClick={() => navigate("/order-confirmation")}
-              className="w-full bg-yellow-500 text-black p-2 rounded-full font-bold hover:bg-yellow-600 transition cursor-pointer"
-            >
-              Pay Now
-            </button>
-          </CartSummary>
+          />
         </div>
       </div>
     </div>

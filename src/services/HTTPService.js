@@ -7,9 +7,9 @@ export class HttpService {
 
   async post(url, body, config = {}) {
     try {
-      const { data } = await this.client.post(url, body, config); // ✅ fixed
+      const { data } = await this.client.post(url, body, config);
       return data;
-    } catch (error) {                                             // ✅ fixed
+    } catch (error) {                                            
       console.log(error);
       throw error;
     }
