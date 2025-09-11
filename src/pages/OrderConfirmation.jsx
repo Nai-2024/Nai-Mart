@@ -1,19 +1,16 @@
 import { useLocation } from "react-router-dom";
-import { CartContext } from "../components/cart/CartProvider";
-import { useContext, useEffect, useState } from "react";
-import CartSummary from "../components/cart/CartSummery";
-import { calculateCartTotals } from "../services/cartUtils";
+import { useEffect, useState } from "react";
 import { auth, db } from "../services/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
+import CartSummary from "../components/cart/CartSummery";
 
 export default function OrderConfirmation() {
   const location = useLocation();
-  const { cartItems } = useContext(CartContext);
-  const [shippingData, setShippingData] = useState({});
-  const [orderNumber, setOrderNumber] = useState(""); // store generated order number
-  const { subtotal, shipping, tax, total } = calculateCartTotals(cartItems);
 
-  // --- Order date ---
+  const [order, setOrder] = useState(null);
+  const [shippingData, setShippingData] = useState({});
+  const [orderNumber, setOrderNumber] = useState("");
+
   const today = new Date();
   const orderDate = today.toLocaleDateString("en-CA", {
     year: "numeric",
@@ -21,10 +18,9 @@ export default function OrderConfirmation() {
     day: "numeric",
   });
 
-  // --- Generating shipping date ---
   const generateShippingDate = () => {
     const today = new Date();
-    today.setDate(today.getDate() + 5); // adds 5 days
+    today.setDate(today.getDate() + 5);
     return today.toLocaleDateString("en-CA", {
       year: "numeric",
       month: "short",
@@ -32,29 +28,28 @@ export default function OrderConfirmation() {
     });
   };
 
-  // --- Generating order number ---
-  const generateOrderNumber = () => {
-    const randomNum = Math.floor(100000 + Math.random() * 900000); // 6-digit number
-    return `${randomNum}`;
-  };
+  const generateOrderNumber = () =>
+    `${Math.floor(100000 + Math.random() * 900000)}`;
 
   useEffect(() => {
-    // --- Generate order number once when component mounts ---
     setOrderNumber(generateOrderNumber());
 
-    // --- Fetch shipping info ---
+    const savedOrder = localStorage.getItem("lastOrder");
+    if (savedOrder) setOrder(JSON.parse(savedOrder));
+
     const fetchShippingData = async () => {
       try {
         if (auth.currentUser) {
           const docRef = doc(db, "users", auth.currentUser.uid);
           const docSnap = await getDoc(docRef);
           if (docSnap.exists()) {
+            const data = docSnap.data();
             setShippingData({
-              ...docSnap.data().shippingAddress,
-              firstName: docSnap.data().firstName,
-              lastName: docSnap.data().lastName,
-              email: docSnap.data().email,
-              phone: docSnap.data().phone,
+              ...data.shippingAddress,
+              firstName: data.firstName,
+              lastName: data.lastName,
+              email: data.email,
+              phone: data.phone,
             });
           } else {
             setShippingData(location.state?.shippingData || {});
@@ -71,9 +66,8 @@ export default function OrderConfirmation() {
   }, [location.state]);
 
   return (
-    <div className="w-full flex justify-center items-center p-6">
-      {/* LEFT SIDE - Order Details */}
-      <div className="w-full max-w-3xl flex flex-col gap-6 bg-gray-100 rounded shadow p-6 mx-auto">
+    <div className="w-full flex justify-center p-4">
+      <div className="w-full max-w-3xl flex flex-col gap-4 bg-white rounded shadow p-6">
         <h2 className="text-2xl font-bold text-green-600 text-center">
           Thank you for shopping with Nai Mart!
         </h2>
@@ -82,123 +76,114 @@ export default function OrderConfirmation() {
         </p>
 
         {/* Order Status */}
-        <div>
-          <h3 className="bg-gray-400 px-4 text-lg font-semibold">
+        <div className="bg-gray-100 rounded shadow p-4">
+          <h3 className="bg-gray-400 px-4 text-lg font-semibold mb-2">
             Order Status
           </h3>
-          <div className="flex flex-col gap-1 text-sm py-2 px-6">
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Order Status:
-              </span>
-              <span className="text-green-600 font-bold">Confirmed</span>
-            </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm px-4 py-2">
+            <span className="font-semibold text-gray-800">Order Status:</span>
+            <span className="text-green-600 font-bold">Confirmed</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Order Date:
-              </span>
-              <span>{orderDate}</span>
-            </div>
+            <span className="font-semibold text-gray-800">Order Date:</span>
+            <span>{orderDate}</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Order No:
-              </span>
-              {/* Called the function earlier and stored in state */}
-              <span>{orderNumber}</span>
-            </div>
+            <span className="font-semibold text-gray-800">Order No:</span>
+            <span>{orderNumber}</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Shipping Date:
-              </span>
-              {/* Called the function directly here */}
-              <span>{generateShippingDate()}</span>
-            </div>
+            <span className="font-semibold text-gray-800">Shipping Date:</span>
+            <span>{generateShippingDate()}</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Payment Status:
-              </span>
-              <span>Paid</span>
-            </div>
+            <span className="font-semibold text-gray-800">Payment Status:</span>
+            <span>Paid</span>
           </div>
         </div>
 
         {/* Shipping Info */}
-        <div className="mb-6">
+
+        <div className="bg-gray-100 rounded shadow p-4">
           <h3 className="bg-gray-400 px-4 text-lg font-semibold">
             Shipping Information
           </h3>
-          <div className="flex flex-col gap-1 text-sm py-2 px-6">
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Full Name:
-              </span>
-              <span className="text-gray-700">
-                {shippingData.firstName} {shippingData.lastName}
-              </span>
-            </div>
+          <div className="grid grid-cols-2 gap-x-4 gap-y-1 text-sm px-4 py-2">
+            <span className="font-semibold text-gray-800">Full Name:</span>
+            <span className="text-gray-700">
+              {shippingData.firstName} {shippingData.lastName}
+            </span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">
-                Phone Number:
-              </span>
-              <span className="text-gray-700">{shippingData.phone}</span>
-            </div>
+            <span className="font-semibold text-gray-800">Phone Number:</span>
+            <span className="text-gray-700">{shippingData.phone}</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">Email:</span>
-              <span className="text-gray-700">{shippingData.email}</span>
-            </div>
+            <span className="font-semibold text-gray-800">Email:</span>
+            <span className="text-gray-700">{shippingData.email}</span>
 
-            <div className="flex">
-              <span className="font-semibold text-gray-800 w-48">Address:</span>
-              <span className="text-gray-700">
-                {shippingData.address}
-                {shippingData.address2
-                  ? `, ${shippingData.address2}`
-                  : ""}, {shippingData.city}, {shippingData.province}{" "}
-                {shippingData.postalCode}, {shippingData.country}
-              </span>
-            </div>
+            <span className="font-semibold text-gray-800">Address:</span>
+            <span className="text-gray-700">
+              {shippingData.address}
+              {shippingData.address2 ? `, ${shippingData.address2}` : ""},{" "}
+              {shippingData.city}, {shippingData.province}{" "}
+              {shippingData.postalCode}, {shippingData.country}
+            </span>
           </div>
         </div>
 
         {/* Items Section */}
-        <h3 className="bg-gray-400 px-4 text-lg font-semibold">
-          Items in Your Order
-        </h3>
-        <div className="flex flex-col gap-4">
-          {cartItems.map((item, idx) => (
-            <div key={idx} className="flex gap-4 pb-4">
-              <div className="w-24 h-24 flex justify-center items-center">
-                <img
-                  src={item.image}
-                  alt={item.title}
-                  className="max-h-full object-contain"
-                />
-              </div>
-              <div className="flex flex-col flex-1">
-                <div className="flex justify-between items-start">
-                  <h4 className="font-semibold">{item.title}</h4>
-                  <span className="text-lg font-bold text-yellow-600">
-                    ${item.price}
-                  </span>
+        <div className="bg-gray-100 rounded p-4 shadow">
+          <h3 className="bg-gray-400 px-4 text-lg font-semibold mb-2">
+            Items in Your Order
+          </h3>
+          <div className="flex flex-col">
+            {order?.items?.length > 0 ? (
+              order.items.map((item, idx) => (
+                <div
+                  key={idx}
+                  className={`flex gap-4 py-3 ${
+                    idx !== order.items.length - 1
+                      ? "border-b border-gray-400 pb-5"
+                      : ""
+                  }`}
+                >
+                  <div className="w-24 h-24 flex justify-center items-center">
+                    <img
+                      src={item.image}
+                      alt={item.title}
+                      className="max-h-full object-contain"
+                    />
+                  </div>
+                  <div className="flex flex-col flex-1">
+                    <div className="flex justify-between items-start">
+                      <h4 className="font-semibold">{item.title}</h4>
+                      <span className="text-lg font-bold text-yellow-600">
+                        ${(item.price * item.quantity).toFixed(2)}
+                      </span>
+                    </div>
+                    <p className="text-gray-600 pt-2">{item.description}</p>
+                  </div>
                 </div>
-                <p className="text-gray-600 pt-3">{item.description}</p>
-                <div className="flex items-center pt-2 gap-6">
-                  <span className="font-medium">Rating:</span>
-                  <span>{item.rating?.rate ?? "N/A"} ⭐</span>
-                  <span className="text-sm text-gray-500">
-                    ({item.rating?.count ?? 0} reviews)
-                  </span>
-                </div>
-              </div>
-            </div>
-          ))}
+              ))
+            ) : (
+              <p className="text-gray-500 px-6">
+                No items found in your order.
+              </p>
+            )}
+          </div>
         </div>
+
+        {/* Cart Summary */}
+        {order?.totals && (
+          <div className="bg-gray-100 rounded p-4 shadow">
+            <h3 className="bg-gray-400 px-4 text-lg font-semibold">
+              Your Payment Summary
+            </h3>
+            <CartSummary
+              subtotal={order.totals.subtotal}
+              shipping={order.totals.shipping}
+              tax={order.totals.tax}
+              total={order.totals.total}
+              showCheckoutButton={false}
+              className="px-4 py-0"
+            />
+          </div>
+        )}
       </div>
     </div>
   );

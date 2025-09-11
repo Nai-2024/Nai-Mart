@@ -9,7 +9,8 @@ export default function ProductDetails() {
   const product = location.state; // Retrieves whatever object you passed when navigating
   const { setCartItems } = useContext(CartContext);
 
-  if (!product) { // if no product is in the cart it will display <P>
+  if (!product) {
+    // if no product is in the cart it will display <P>
     return <p className="p-6">No product found.</p>;
   }
 
@@ -21,7 +22,7 @@ export default function ProductDetails() {
   };
   return (
     <div className="w-full flex justify-center">
-      <div className="w-full max-w-[1500px] p-9 flex flex-col md:flex-row gap-2 bg-gray-100">
+      <div className="w-full max-w-[1400px] p-9 flex flex-col md:flex-row gap-20 bg-gray-100">
         {/* Left - Image */}
         <div className="w-full md:w-2/5 flex justify-center">
           <div className="w-full h-96 flex justify-center items-center">
@@ -52,7 +53,7 @@ export default function ProductDetails() {
 
           <button
             onClick={handleAddToCart}
-            className="bg-yellow-500 text-black py-1 rounded-full hover:bg-yellow-600 transition cursor-pointer"
+            className="bg-yellow-500 text-black text-sm px-12 py-1 rounded-full hover:bg-yellow-600 transition cursor-pointer w-auto inline-block self-start"
           >
             Add to Cart
           </button>

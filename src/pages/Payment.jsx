@@ -3,6 +3,13 @@ import { useNavigate } from "react-router-dom";
 import { CartContext } from "../components/cart/CartProvider";
 import { getCart, calculateCartTotals } from "../services/cartUtils";
 import CartSummary from "../components/cart/CartSummery";
+import {
+  validateCardNumber,
+  validateExpiry,
+  validateCVV,
+  validateCardholder,
+  validateCardType,
+} from "../services/validation";
 
 export default function Payment() {
   const { cartItems, setCartItems, clearCart } = useContext(CartContext);
@@ -25,33 +32,66 @@ export default function Payment() {
     cvv: "",
   });
 
+  const [errors, setErrors] = useState({
+    cardholder: "",
+    cardType: "",
+    cardNumber: "",
+    expiry: "",
+    cvv: "",
+  });
+
+  // Real-time input validation
   const handleChange = (e) => {
     const { name, value } = e.target;
     setPaymentData((prev) => ({ ...prev, [name]: value }));
-  };
 
-  // --- Form submit handler ---
-const handleSubmit = (e) => {
-    e.preventDefault();
-
-    // basic validation
-    if (
-      !paymentData.cardholder ||
-      !paymentData.cardType ||
-      !paymentData.cardNumber ||
-      !paymentData.expiry ||
-      !paymentData.cvv
-    ) {
-      alert("Please fill in all payment fields.");
-      return;
+    let error = "";
+    switch (name) {
+      case "cardholder":
+        error = validateCardholder(value)
+          ? ""
+          : "Name must contain only letters";
+        break;
+      case "cardType":
+        error = validateCardType(value) ? "" : "Please select card type";
+        break;
+      case "cardNumber":
+        error = validateCardNumber(value)
+          ? ""
+          : "Card number must be 16 digits";
+        break;
+      case "expiry":
+        error = validateExpiry(value)
+          ? ""
+          : "Expiry must be MM/YY";
+        break;
+      case "cvv":
+        error = validateCVV(value) ? "" : "CVV must be 3-4 digits";
+        break;
+      default:
+        break;
     }
 
-    console.log("Payment info:", paymentData);
+    setErrors((prev) => ({ ...prev, [name]: error }));
+  };
 
-    // Clear cart after payment
+  // Submit handler
+  const handleSubmit = (e) => {
+    e.preventDefault();
+
+    // Prevent submission if any errors exist
+    const hasError = Object.values(errors).some((err) => err !== "");
+    if (hasError) return alert("Please fix all errors before submitting");
+
+    const orderData = {
+      items: cartItems,
+      totals: calculateCartTotals(cartItems),
+      payment: paymentData,
+      date: new Date().toISOString(),
+    };
+
+    localStorage.setItem("lastOrder", JSON.stringify(orderData));
     clearCart();
-
-    // Navigate to confirmation page
     navigate("/order-confirmation");
   };
 
@@ -71,9 +111,14 @@ const handleSubmit = (e) => {
                 value={paymentData.cardholder}
                 onChange={handleChange}
                 placeholder="Your Name"
-                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className={`border p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                  errors.cardholder ? "border-red-500" : "border-gray-300"
+                }`}
                 required
               />
+              {errors.cardholder && (
+                <p className="text-red-500 text-sm mt-1">{errors.cardholder}</p>
+              )}
             </div>
 
             {/* Card Type */}
@@ -83,7 +128,9 @@ const handleSubmit = (e) => {
                 name="cardType"
                 value={paymentData.cardType}
                 onChange={handleChange}
-                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className={`border p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                  errors.cardType ? "border-red-500" : "border-gray-300"
+                }`}
                 required
               >
                 <option value="" disabled>
@@ -93,6 +140,9 @@ const handleSubmit = (e) => {
                 <option value="MasterCard">MasterCard</option>
                 <option value="Amex">American Express</option>
               </select>
+              {errors.cardType && (
+                <p className="text-red-500 text-sm mt-1">{errors.cardType}</p>
+              )}
             </div>
 
             {/* Card Number */}
@@ -104,9 +154,14 @@ const handleSubmit = (e) => {
                 value={paymentData.cardNumber}
                 onChange={handleChange}
                 placeholder="1234 5678 9012 3456"
-                className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className={`border p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                  errors.cardNumber ? "border-red-500" : "border-gray-300"
+                }`}
                 required
               />
+              {errors.cardNumber && (
+                <p className="text-red-500 text-sm mt-1">{errors.cardNumber}</p>
+              )}
             </div>
 
             {/* Expiry and CVV */}
@@ -119,9 +174,14 @@ const handleSubmit = (e) => {
                   value={paymentData.expiry}
                   onChange={handleChange}
                   placeholder="MM/YY"
-                  className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={`border p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                    errors.expiry ? "border-red-500" : "border-gray-300"
+                  }`}
                   required
                 />
+                {errors.expiry && (
+                  <p className="text-red-500 text-sm mt-1">{errors.expiry}</p>
+                )}
               </div>
               <div className="flex flex-col">
                 <label className="mb-1 font-medium">CVV</label>
@@ -131,9 +191,14 @@ const handleSubmit = (e) => {
                   value={paymentData.cvv}
                   onChange={handleChange}
                   placeholder="***"
-                  className="border border-gray-300 p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500"
+                  className={`border p-2 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 ${
+                    errors.cvv ? "border-red-500" : "border-gray-300"
+                  }`}
                   required
                 />
+                {errors.cvv && (
+                  <p className="text-red-500 text-sm mt-1">{errors.cvv}</p>
+                )}
               </div>
             </div>
 
