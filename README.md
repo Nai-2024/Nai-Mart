@@ -57,46 +57,46 @@ src/
 
  ---
 
-**Features** 
+**Features**
 
-  **Home Page & Product Listing**
-- Fetches products from **FakeStore API** using REST.
-- Displays products in a responsive grid.
-- Users can view detailed information on product pages.
+- **Home Page & Product Listing**
+  - Fetches products from FakeStore API using REST
+  - Displays products in a responsive grid
+  - Users can view detailed information on product pages
 
-### Shopping Cart
-- Add/remove items with quantity control.
-- Cart summary includes pricing, tax, and shipping.
-- State managed globally with **React Context**.
+- **Shopping Cart**
+  - Add/remove items with quantity control
+  - Cart summary includes pricing, tax, and shipping
+  - State managed globally with React Context
 
-### User Accounts & Checkout
-- User **sign up & login with Firebase Authentication**.
-- Shipping address & order history stored in **Firestore**.
-- Checkout shows final summary before payment.
+- **User Accounts & Checkout**
+  - User sign up & login with Firebase Authentication
+  - Shipping address & order history stored in Firestore
+  - Checkout shows final summary before payment
 
-### Payment & Order Confirmation
-- Payment form validation (card number, expiry, CVV).
-- Generates order confirmation with ID, total amount, and shipping info.
-
----
-
-## Tech Stack
-
-- **Frontend:** React + JSX + TailwindCSS
-- **State Management:** React Context API
-- **Database & Auth:** Firebase Authentication + Firestore
-- **API Integration:** FakeStore API (REST)
-- **Validation:** Custom validation helpers in `validation.js`
-- **Deployment:** GitHub + Netlify / Vercel
+- **Payment & Order Confirmation**
+  - Payment form validation (card number, expiry, CVV)
+  - Generates order confirmation with ID, total amount, and shipping info
 
 ---
 
-## Learning & Impact
+**Tech Stack**
 
-- Hands-on experience with **Firebase Authentication & Firestore**.
-- Learned **REST API integration** and **e-commerce workflows**.
-- Implemented **responsive UI, form validation, and checkout logic**.
-- Improved understanding of **state management & context providers**.
+- Frontend: React + JSX + TailwindCSS
+- State Management: React Context API
+- Database & Auth: Firebase Authentication + Firestore
+- API Integration: FakeStore API (REST)
+- Validation: Custom validation helpers in `validation.js`
+- Deployment: GitHub + Netlify / Vercel
+
+---
+
+**Learning & Impact**
+
+- Hands-on experience with Firebase Authentication & Firestore
+- Learned REST API integration and e-commerce workflows
+- Implemented responsive UI, form validation, and checkout logic
+- Improved understanding of state management & context providers
 
 ---
 ```
