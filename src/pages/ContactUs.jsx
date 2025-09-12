@@ -1,9 +1,10 @@
 import { useState } from "react";
 import { liveValidateField } from "../services/validation";
-import { companyInfo } from "../services/contact";
+import { companyInfo } from "../services/companyInfo";
 import { GradientBrandText } from "../services/gradientBrandText";
 
 export default function ContactUs() {
+  // formData stores the values entered in the form fields
   const [formData, setFormData] = useState({
     name: "",
     email: "",
@@ -11,35 +12,44 @@ export default function ContactUs() {
     message: "",
   });
 
+  // errors stores validation messages for each field
   const [errors, setErrors] = useState({});
+
+  // submitted tracks whether the form has been successfully submitted
   const [submitted, setSubmitted] = useState(false);
 
+  // Handle Form Input Changes
   const handleChange = (e) => {
     const { name, value } = e.target;
+    // Update formData state with new input value
     setFormData((prev) => ({ ...prev, [name]: value }));
 
-    // use live validation from validation.js
+    // use llive validation for the changed field and update errors state
     setErrors((prev) => ({
       ...prev,
       [name]: liveValidateField(name, value),
     }));
   };
 
+  // Handle Form Submission
   const handleSubmit = (e) => {
     e.preventDefault();
 
+    // validation for all fields
     const newErrors = {};
     for (const key in formData) {
       newErrors[key] = liveValidateField(key, formData[key]);
     }
     setErrors(newErrors);
 
+    // Stop submission if any validation errors exist
     if (Object.values(newErrors).some((msg) => msg !== "")) return;
 
+    // Mark form as submitted and log the form data
     setSubmitted(true);
     console.log("Message sent:", formData);
 
-    // Clear form fields
+    // Clear the form fields after submission
     setFormData({
       name: "",
       email: "",
@@ -51,23 +61,29 @@ export default function ContactUs() {
   return (
     <div className="w-full flex justify-center p-4">
       <div className="w-full max-w-[1300px] p-4 bg-white shadow-l">
+        {/* Page Header */}
         <h1 className="text-3xl font-extrabold text-gray-900 text-center py-6">
           Contact <GradientBrandText text="Us" />
         </h1>
 
         <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-          {/* Contact Form */}
+          {/* Contact Form Section */}
           <div>
             <h2 className="text-lg font-semibold text-gray-800 pb-3">
               Send Us a Message
             </h2>
 
+            {/* Success Message */}
             {submitted && (
               <div className="mb-4 p-3 bg-green-100 text-green-800 rounded">
                 Your message has been sent successfully!
               </div>
             )}
 
+            {/* Form Fields */}
+            {/* Name, Email, Subject, Message Fields */}
+            {/* Each input updates formData and errors state dynamically */}
+            {/* Button is disabled after successful submission */}
             <form onSubmit={handleSubmit}>
               {/* Name */}
               <div className="pb-4">

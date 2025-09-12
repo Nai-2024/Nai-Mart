@@ -1,5 +1,5 @@
 import { Link } from "react-router-dom";
-import { companyInfo } from "../services/contact";
+import { companyInfo } from "../services/companyInfo";
 
 export default function Footer() {
   // Reusable constant for footer link styles

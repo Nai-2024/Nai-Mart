@@ -2,9 +2,9 @@
 
 import { getCart, calculateCartTotals, } from "../../services/cartUtils";
 import { useEffect, useContext } from "react";
-import { CartContext } from "./CartProvider";
-import CartItem from "./CartItem";
-import CartSummary from "./CartSummery";
+import { CartContext } from "../cart/CartProvider";
+import CartItem from "../cart/CartItem";
+import CartSummary from "../cart/CartSummery";
 
 export default function ProductCart() {
   const { cartItems, setCartItems } = useContext(CartContext); // Keeps track of the current items in the cart. Updates the cart when items are added, removed, or quantity is changed.
@@ -58,13 +58,13 @@ const updateCart = (itemId, action) => {
   const { subtotal, shipping, tax, total } = calculateCartTotals(cartItems);
 
   return (
-    <div className="w-full flex justify-center">
-      <div className="w-full max-w-[1500px] p-4">
+      <div className="w-full flex justify-center p-4">
+    <div className="w-full max-w-[1400px]">
         {cartItems.length > 0 ? (
           <div>
-            <h2 className="text-xl font-semibold pb-5">Items in Cart</h2>
-            <div className="container mx-auto grid grid-cols-1 md:grid-cols-4 gap-2">
-              <div className="md:col-span-3 flex flex-col gap-2">
+            <h2 className="text-xl font-semibold pb-2">Items in Cart</h2>
+            <div className="grid grid-cols-1 md:grid-cols-4 gap-2">
+              <div className="md:col-span-3 flex flex-col gap-4">
                 {/* rendering CartItem component*/}
                 {cartItems.map((item) => (
                   <CartItem

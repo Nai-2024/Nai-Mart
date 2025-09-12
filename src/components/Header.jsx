@@ -8,25 +8,30 @@ import { signOut } from "firebase/auth";
 import { auth } from "../services/firebaseConfig";
 
 export default function Header({ currentUser }) {
+  // Access cart items from CartContext
   const { cartItems } = useContext(CartContext);
+
+  // Calculate total quantity of items in cart
   const totalQuantity = cartItems.reduce(
     (sum, item) => sum + (item.quantity || 1),
     0
   );
-
+  // For navigation redirection
   const navigate = useNavigate();
 
+  // Handle user logout
   const handleLogout = async () => {
     try {
       await signOut(auth);
-      localStorage.removeItem("currentUser");
-      navigate("/");
+      localStorage.removeItem("currentUser"); // // Clear localStorage
+      navigate("/"); // Redirect to home
     } catch (err) {
       console.error("Logout error:", err);
       alert("Failed to logout. Try again.");
     }
   };
 
+  // Custom styled navigation link (supports button or NavLink)
   const StyledNavLink = ({ to, children, as = "a", ...props }) => {
     const Component = as === "button" ? "button" : NavLink;
     return (
@@ -45,11 +50,7 @@ export default function Header({ currentUser }) {
 
   return (
     <header className="w-full bg-[#232F3E] font-poppins font-semibold sticky top-0 z-50 shadow-md">
-       {/* 🔔 Under construction banner */}
-    <div className="bg-yellow-400 text-black text-center py-2 text-sm font-medium">
-      🚧 This application is still under development. Some features may not work as expected. 🚧
-    </div>
-      <nav className="w-full flex items-center justify-between pl- py-3 md:px-6">
+      <nav className="w-full flex items-center justify-between px-4 py-3 md:px-6">
         {/* Left - Logo */}
         <div className="flex-shrink-0">
           <NavLink to="/">
@@ -67,7 +68,6 @@ export default function Header({ currentUser }) {
           <StyledNavLink to="/about">About Us</StyledNavLink>
           <StyledNavLink to="/contact">Contact</StyledNavLink>
 
-          {/* Login / Logout (same layout space) */}
           {currentUser ? (
             <StyledNavLink as="button" onClick={handleLogout}>
               Logout
@@ -85,20 +85,21 @@ export default function Header({ currentUser }) {
                 Welcome
               </span>
               <GradientBrandText
-                text={currentUser.firstName} // Show first name only
+                text={currentUser.firstName}
                 className="text-[11px] md:text-[13px] truncate max-w-[100px]"
               />
             </div>
           )}
-
-          <NavLink to="/cart" className="relative">
-            <img src={cart} alt="Cart" className="w-8 md:w-9 cursor-pointer" />
-            {totalQuantity > 0 && (
-              <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
-                {totalQuantity}
-              </span>
-            )}
-          </NavLink>
+          <div className="pr-4">
+            <NavLink to="/cart" className="relative">
+              <img src={cart} alt="Cart" className="w-8 md:w-9 " />
+              {totalQuantity > 0 && (
+                <span className="absolute -top-2 -right-2 bg-red-500 text-white rounded-full w-5 h-5 text-xs flex items-center justify-center">
+                  {totalQuantity}
+                </span>
+              )}
+            </NavLink>
+          </div>
         </div>
       </nav>
     </header>

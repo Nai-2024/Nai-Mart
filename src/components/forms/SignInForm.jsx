@@ -1,6 +1,6 @@
 import { useState } from "react";
 import { signInWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../services/firebaseConfig";
+import { auth, db } from "../../services/firebaseConfig";
 import { doc, getDoc } from "firebase/firestore";
 import { useNavigate } from "react-router-dom";
 
@@ -26,7 +26,11 @@ export default function SignInForm() {
     }
 
     try {
-      const userCredential = await signInWithEmailAndPassword(auth, formData.email, formData.password);
+      const userCredential = await signInWithEmailAndPassword(
+        auth,
+        formData.email,
+        formData.password
+      );
       const user = userCredential.user;
 
       // Fetch full user info from Firestore
@@ -37,7 +41,10 @@ export default function SignInForm() {
       }
 
       // Save all info in localStorage
-      localStorage.setItem("currentUser", JSON.stringify({ uid: user.uid, email: user.email, ...userData }));
+      localStorage.setItem(
+        "currentUser",
+        JSON.stringify({ uid: user.uid, email: user.email, ...userData })
+      );
 
       setToast(`Welcome back, ${userData.firstName || "User"}! 🎉`);
       setFormData({ email: "", password: "" });

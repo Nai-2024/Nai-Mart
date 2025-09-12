@@ -5,10 +5,9 @@
 export default function CartItem({ item, onIncrease, onDecrease, onRemove }) {
 
   return (
-  
     <div className="bg-gray-100 p-4 rounded shadow flex flex-col md:flex-row min-h-[220px]">
       {/* Product Image */}
-      <div className="md:w-1/3 flex justify-center items-start mb-4 md:mb-0">
+      <div className="md:w-1/3 flex justify-center items-start pb-4 md:mb-0">
         <img
           src={item.image}
           alt={item.title}

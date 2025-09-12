@@ -1,11 +1,10 @@
 import { useState } from "react";
 import { createUserWithEmailAndPassword } from "firebase/auth";
-import { auth, db } from "../services/firebaseConfig";
+import { auth, db } from "../../services/firebaseConfig";
 import { doc, setDoc } from "firebase/firestore";
-import { validateSignupForm } from "../services/validation";
+import { validateSignupForm } from "../../services/validation";
 
 export default function SignUpForm() {
-
   // initializing the state for your signup form using React’s useState hook - sets up all the signup form fields with default values
   const [formData, setFormData] = useState({
     firstName: "",
@@ -31,7 +30,6 @@ export default function SignUpForm() {
   // ------------------- Track registration completion -------------------
   const [registered, setRegistered] = useState(false); // Toggle to show form or thank-you message
 
-
   // ------------------- Live field validation -------------------
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -46,8 +44,7 @@ export default function SignUpForm() {
     }));
   };
 
-
- // ------------------- Submit handler -------------------
+  // ------------------- Submit handler -------------------
   const handleSubmit = async (e) => {
     e.preventDefault(); // Prevent page reload
     setToast(""); // Clear previous toast
@@ -65,7 +62,7 @@ export default function SignUpForm() {
       return;
     }
 
-try {
+    try {
       // ------------------- Firebase Auth -------------------
       const userCredential = await createUserWithEmailAndPassword(
         auth,
@@ -117,7 +114,6 @@ try {
       setErrors({ general: err.message });
     }
   };
-
 
   return (
     <div className="w-full flex justify-center p-4 bg-gray-100 min-h-screen">

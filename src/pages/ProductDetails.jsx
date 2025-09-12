@@ -21,7 +21,7 @@ export default function ProductDetails() {
     //window.location.reload(); // forces ProductCart to read updated localStorage
   };
   return (
-    <div className="w-full flex justify-center">
+    <div className="w-full flex justify-center p-4">
       <div className="w-full max-w-[1400px] p-9 flex flex-col md:flex-row gap-20 bg-gray-100">
         {/* Left - Image */}
         <div className="w-full md:w-2/5 flex justify-center">

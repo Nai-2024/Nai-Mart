@@ -5,12 +5,14 @@ import { doc, getDoc } from "firebase/firestore";
 import CartSummary from "../components/cart/CartSummery";
 
 export default function OrderConfirmation() {
-  const location = useLocation();
+  const location = useLocation(); // Get data passed via navigation (e.g., shipping info from Payment page)
 
-  const [order, setOrder] = useState(null);
-  const [shippingData, setShippingData] = useState({});
-  const [orderNumber, setOrderNumber] = useState("");
+  // Local state
+  const [order, setOrder] = useState(null); // Stores order data retrieved from localStorage
+  const [shippingData, setShippingData] = useState({}); // Stores shipping info for display
+  const [orderNumber, setOrderNumber] = useState(""); // Randomly generated order number
 
+  // Current date for order date display
   const today = new Date();
   const orderDate = today.toLocaleDateString("en-CA", {
     year: "numeric",
@@ -18,9 +20,10 @@ export default function OrderConfirmation() {
     day: "numeric",
   });
 
+  // Function to generate expected shipping date (5 days from today)
   const generateShippingDate = () => {
     const today = new Date();
-    today.setDate(today.getDate() + 5);
+    today.setDate(today.getDate() + 5); // Add 5 days
     return today.toLocaleDateString("en-CA", {
       year: "numeric",
       month: "short",
@@ -28,22 +31,28 @@ export default function OrderConfirmation() {
     });
   };
 
+  // Function to generate a random 6-digit order number
   const generateOrderNumber = () =>
     `${Math.floor(100000 + Math.random() * 900000)}`;
 
+  // Fetch order and shipping data on mount
   useEffect(() => {
+    // Generate and set order number
     setOrderNumber(generateOrderNumber());
 
+    // Retrieve last order from localStorage
     const savedOrder = localStorage.getItem("lastOrder");
     if (savedOrder) setOrder(JSON.parse(savedOrder));
 
+    // Async function to fetch shipping info
     const fetchShippingData = async () => {
       try {
-        if (auth.currentUser) {
-          const docRef = doc(db, "users", auth.currentUser.uid);
-          const docSnap = await getDoc(docRef);
+        if (auth.currentUser) { // If user is logged in
+          const docRef = doc(db, "users", auth.currentUser.uid); // Reference to user's Firestore doc
+          const docSnap = await getDoc(docRef); // Fetch document
           if (docSnap.exists()) {
             const data = docSnap.data();
+            // Set shipping info from Firestore data
             setShippingData({
               ...data.shippingAddress,
               firstName: data.firstName,
@@ -52,9 +61,11 @@ export default function OrderConfirmation() {
               phone: data.phone,
             });
           } else {
+            // Fallback to shipping info passed via navigation state
             setShippingData(location.state?.shippingData || {});
           }
         } else {
+          // If not logged in, use shipping info from navigation state
           setShippingData(location.state?.shippingData || {});
         }
       } catch (err) {
@@ -62,12 +73,16 @@ export default function OrderConfirmation() {
       }
     };
 
-    fetchShippingData();
-  }, [location.state]);
+    fetchShippingData(); // Call async function
+  }, [location.state]); // Runs when location.state changes
 
+  // JSX rendering
   return (
     <div className="w-full flex justify-center p-4">
+      {/* Main container */}
       <div className="w-full max-w-3xl flex flex-col gap-4 bg-white rounded shadow p-6">
+        
+        {/* Header */}
         <h2 className="text-2xl font-bold text-green-600 text-center">
           Thank you for shopping with Nai Mart!
         </h2>
@@ -75,7 +90,7 @@ export default function OrderConfirmation() {
           Your order has been placed successfully. Below are your details.
         </p>
 
-        {/* Order Status */}
+        {/* Order Status Section */}
         <div className="bg-gray-100 rounded shadow p-4">
           <h3 className="bg-gray-400 px-4 text-lg font-semibold mb-2">
             Order Status
@@ -98,8 +113,7 @@ export default function OrderConfirmation() {
           </div>
         </div>
 
-        {/* Shipping Info */}
-
+        {/* Shipping Information Section */}
         <div className="bg-gray-100 rounded shadow p-4">
           <h3 className="bg-gray-400 px-4 text-lg font-semibold">
             Shipping Information
@@ -142,6 +156,7 @@ export default function OrderConfirmation() {
                       : ""
                   }`}
                 >
+                  {/* Item Image */}
                   <div className="w-24 h-24 flex justify-center items-center">
                     <img
                       src={item.image}
@@ -149,6 +164,8 @@ export default function OrderConfirmation() {
                       className="max-h-full object-contain"
                     />
                   </div>
+
+                  {/* Item Details */}
                   <div className="flex flex-col flex-1">
                     <div className="flex justify-between items-start">
                       <h4 className="font-semibold">{item.title}</h4>
@@ -168,7 +185,7 @@ export default function OrderConfirmation() {
           </div>
         </div>
 
-        {/* Cart Summary */}
+        {/* Payment Summary Section */}
         {order?.totals && (
           <div className="bg-gray-100 rounded p-4 shadow">
             <h3 className="bg-gray-400 px-4 text-lg font-semibold">
@@ -179,7 +196,7 @@ export default function OrderConfirmation() {
               shipping={order.totals.shipping}
               tax={order.totals.tax}
               total={order.totals.total}
-              showCheckoutButton={false}
+              showCheckoutButton={false} // Hide checkout button on order confirmation page
               className="px-4 py-0"
             />
           </div>

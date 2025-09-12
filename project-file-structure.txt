@@ -1,0 +1,85 @@
+
+
+----File Structure
+
+src/
+ ├─ assets/                        # All static assets (images, icons, logos)
+ │   ├─ logo.png                   # Website/app logo
+ │   ├─ cart.png                   # Cart icon
+ │   └─ ...other images            # Any other product images or icons
+ │
+ ├─ components/                    # Reusable UI components
+ │   ├─ cart/                      # All cart-related components
+ │   │   ├─ CartItem.jsx           # Displays a single cart item with quantity controls
+ │   │   ├─ CartProvider.jsx       # Context provider to manage cart state across app
+ │   │   ├─ CartSummary.jsx        # Shows subtotal, tax, shipping, total, and optional action button
+ │   │    
+ │   ├─ forms/                     # Form components used throughout the app
+ │   │   ├─ PaymentForm.jsx        # Form to collect payment information (card, expiry, CVV)
+ │   │   ├─ SignUpForm.jsx         # User registration form, validates input and stores in Firebase
+ │   │   └─ SignInForm.jsx         # User login form, authenticates using Firebase Auth
+ │   │
+ │   ├─ products/                  # Product-related UI components
+ │   │   ├─ ProductsList.jsx       # Renders a grid/list of ProductCard components
+ │   │   ├─ ProductCart.jsx        # Main cart page, renders CartItem + CartSummary
+ │   │   └─ ProductCard.jsx        # UI card for displaying a single product (used in list/grid)
+ │   │
+ │   ├─ Footer.jsx                 # Footer with company info, links, and social icons
+ │   ├─ Header.jsx                 # Top navigation bar with logo, links, search, and cart icon
+ │   ├─ ShippingSummary.jsx        # Displays user shipping info fetched from Firebase/localStorage
+ │   ├─ SidebarFilters.jsx         # Handles category & price filtering UI
+ │   └─ NotificationToast.jsx      # Reusable toast notification component for messages
+ │
+ ├─ pages/                         # Page-level components (mapped to routes)
+ │   ├─ About.jsx                  # About Us page with company info and mission
+ │   ├─ Checkout.jsx               # Checkout page (billing, shipping info, order summary)
+ │   ├─ ContactUs.jsx              # Contact page with form to send messages to company
+ │   ├─ Home.jsx                   # Main product listing page (previously ProductsPage.jsx)
+ │   ├─ OrderConfirmation.jsx      # Confirmation page after successful payment/order
+ │   ├─ Payment.jsx                # Payment page, renders PaymentForm + CartSummary (without button)
+ │   ├─ ProductDetails.jsx         # Page showing product details, images, and add-to-cart button
+ │
+ ├─ services/                      
+ │   ├─ api.js                     # Functions for API calls (fetch products, categories, etc.)
+ │   ├─ cartUtils.js               # Cart helper functions (add/remove items, calculate totals)
+ │   ├─ companyInfo.js             # Static company info, like address, contact, social links
+ │   ├─ firebaseConfig.js          # Firebase initialization and configuration (Auth & Firestore)
+ │   ├─ gradientBrandText.jsx      # Utility to apply brand color gradient to text
+ │   └─ validation.js              # Validation helper functions for forms (signup, shipping, payment)
+ │
+ └─ App.jsx                        # Main entry point, sets up routes, providers, and global state
+
+
+ -----
+
+-----
+Description:
+Nai Mart is a full-featured e-commerce platform designed for a seamless online shopping experience.
+
+Key Features:
+Home Page & Product Listing:
+Products are fetched from FakeStore API using REST API.
+Users can view detailed information for each product.
+
+Shopping Cart:
+Users can add products to their cart.
+Cart shows product details, pricing, taxes, and shipping fees.
+
+User Accounts & Checkout:
+Users can sign up or log in via Firebase Authentication.
+Shipping addresses and order history are stored in Firebase Firestore.
+Checkout shows the complete cart summary before payment.
+
+Payment & Order Confirmation:
+Users select payment methods and confirm their orders.
+Upon payment, an order confirmation is generated with order number, total amount, and shipping details.
+
+Technical Highlights:
+Built with React for the frontend.
+Integrated Firebase for authentication and storing user/shipping/order data.
+REST API integration for fetching product data.
+Implements form validations, responsive design, and state management for cart and checkout.
+
+Impact / Learning:
+Gained hands-on experience with Firebase Authentication & Firestore, API integration, and e-commerce workflows.
+Learned to handle cart management, checkout flows, and payment confirmation effectively.
