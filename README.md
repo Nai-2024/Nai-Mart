@@ -57,9 +57,9 @@ src/
 
  ---
 
-## Features
+**Features** 
 
-### Home Page & Product Listing
+  **Home Page & Product Listing**
 - Fetches products from **FakeStore API** using REST.
 - Displays products in a responsive grid.
 - Users can view detailed information on product pages.
